@@ -1,0 +1,37 @@
+[hello.world]
+
+source = '''
+
+  .line.hello == "world"
+  .line.lorem == "ipsum"
+
+  # This is a comment
+  parsed, error = parse_regex(.message, r'\[(?P<lorem>.+)\] "(?P<ipsum>\S+)"')
+
+  if error == null {
+    # Try something else
+    .message = "hello world"
+  }
+
+'''
+
+source = """
+
+  .line.hello == "world"
+  .line.lorem == "ipsum"
+
+
+  # This is a comment
+  parsed, error = parse_regex(.message, r'\[(?P<lorem>.+)\] "(?P<ipsum>\S+)"')
+
+  if error == null {
+    # Try something else
+    .message = "hello world"
+  }
+
+
+"""
+
+source = '.line.hello == "world"'
+
+source = ".line.hello == \"world\""

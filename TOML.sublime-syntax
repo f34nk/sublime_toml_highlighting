@@ -78,6 +78,7 @@ contexts:
   main:
     - match: '^{{ws}}'
       # Ignore leading whitespace for all expressions.
+    - include: embedded_source
     - include: comments
     - include: tables
     - include: keyval
@@ -88,6 +89,23 @@ contexts:
       # Invalid things -> everything unmatched
       captures:
         1: invalid.illegal.toml
+
+  embedded_source:
+    - match: "(source) = (''')"
+      captures:
+        1: source.toml meta.tag.key.toml entity.name.tag.toml
+        2: punctuation.definition.string.begin.toml
+      embed: scope:source.java-props
+      escape: "'''"
+    - match: '(source) = (""")'
+      captures:
+        1: source.toml meta.tag.key.toml entity.name.tag.toml
+        2: punctuation.definition.string.begin.toml
+      embed: scope:source.java-props
+      escape: '"""'
+    - include: string-escape
+    - include: basic-string
+    - include: literal-string
 
   comments:
     - match: '{{ws}}((#).*)'
