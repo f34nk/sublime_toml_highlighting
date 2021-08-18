@@ -1,0 +1,80 @@
+[hello.world]
+
+# multiline vrl
+source = '''
+
+  .line.hello == "world"
+  .line.lorem == "ipsum"
+
+  # This is a comment
+  parsed, error = parse_regex(.message, r'\[(?P<lorem>.+)\] "(?P<ipsum>\S+)"')
+
+  if error == null {
+    # Try something else
+    .message = "hello world"
+  }
+
+'''
+
+source = """
+
+  .line.hello == "world"
+  .line.lorem == "ipsum"
+
+
+  # This is a comment
+  parsed, error = parse_regex(.message, r'\[(?P<lorem>.+)\] "(?P<ipsum>\S+)"')
+
+  if error == null {
+    # Try something else
+    .message = "hello world"
+  }
+
+
+"""
+
+source = '.line.hello == "world"'
+
+source = ".line.hello == \"world\""
+
+
+route.splunk = """
+
+  .line.hello == "world"
+  .line.lorem == "ipsum"
+
+
+  # This is a comment
+  parsed, error = parse_regex(.message, r'\[(?P<lorem>.+)\] "(?P<ipsum>\S+)"')
+
+  if error == null {
+    # Try something else
+    .message = "hello world"
+  }
+
+
+"""
+
+# multiline lua
+process = """
+    local xml2lua = require("xml2lua")
+
+    local column_names = {
+        "key",
+        "host",
+        "date"
+    }
+
+    function process(event, emit)
+        local handler = require("xmlhandler.tree")
+        local parser = xml2lua.parser(handler)
+
+        parser:parse(event.log.message)
+
+        event.log.date = handler.root.i.request.date
+        event.log.key = handler.root.i._attr.key
+        event.log.key = handler.root.i._attr.host
+
+        emit(event)
+    end
+  """

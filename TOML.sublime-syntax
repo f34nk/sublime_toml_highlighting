@@ -78,7 +78,8 @@ contexts:
   main:
     - match: '^{{ws}}'
       # Ignore leading whitespace for all expressions.
-    - include: embedded_source
+    - include: multiline_vrl
+    - include: multiline_lua
     - include: comments
     - include: tables
     - include: keyval
@@ -90,18 +91,37 @@ contexts:
       captures:
         1: invalid.illegal.toml
 
-  embedded_source:
-    - match: "(source) = (''')"
+  multiline_vrl:
+    - match: "(source|route.*|valid|condition) = (''')"
       captures:
         1: source.toml meta.tag.key.toml entity.name.tag.toml
         2: punctuation.definition.string.begin.toml
-      embed: scope:source.java-props
+      # embed: scope:source.perl
+      embed: scope:source.php
       escape: "'''"
-    - match: '(source) = (""")'
+    - match: '(source|route.*|valid|condition) = (""")'
       captures:
         1: source.toml meta.tag.key.toml entity.name.tag.toml
         2: punctuation.definition.string.begin.toml
-      embed: scope:source.java-props
+      # embed: scope:source.perl
+      embed: scope:source.php
+      escape: '"""'
+    - include: string-escape
+    - include: basic-string
+    - include: literal-string
+
+  multiline_lua:
+    - match: "(process) = (''')"
+      captures:
+        1: source.toml meta.tag.key.toml entity.name.tag.toml
+        2: punctuation.definition.string.begin.toml
+      embed: scope:source.lua
+      escape: "'''"
+    - match: '(process) = (""")'
+      captures:
+        1: source.toml meta.tag.key.toml entity.name.tag.toml
+        2: punctuation.definition.string.begin.toml
+      embed: scope:source.lua
       escape: '"""'
     - include: string-escape
     - include: basic-string
